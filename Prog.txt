@@ -1,0 +1,50 @@
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+int determ(int**& mas, int N) {
+  if (N == 1) {
+    return mas[0][0];
+  }
+  int64_t res = 0;
+  int** temp = new int*[N - 1];
+  for (int it = 0; it < (N - 1); ++it) {
+    temp[it] = new int[N - 1];
+  }
+  for (int col = 0; col < N; ++col) {
+    int cur_col = 0;
+    for (int row = 1; row < N; ++row) {
+      cur_col = 0;
+      for (int col2 = 0; col2 < N; ++col2) {
+        if (col2 == col) {
+          continue;
+        }
+        
+        temp[row - 1][cur_col] = mas[row][col2];
+        ++cur_col;
+      }
+    }
+    res += mas[0][col] * int64_t(pow(-1, col + 2)) * determ(temp, N - 1); 
+  }
+  for (int i = 0; i < N - 1; ++i) {
+    delete[] temp[i];
+  }
+  delete[] temp;
+  return res;
+}
+
+int main() {
+  int N;
+  cin >> N;
+  int** mas = new int*[N];
+  for (int it = 0; it < N; ++it) {
+    mas[it] = new int[N];
+  }
+  for (int row = 0; row < N; ++row) {
+    for (int col = 0; col < N; ++col) {
+      cin >> mas[row][col];
+    }
+  } 
+  cout << determ(mas, N);
+  return 0;
+}
